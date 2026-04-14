@@ -1,0 +1,204 @@
+<!-- components/customer-mgmt.html - Customer management page section -->
+<div class="page-section" id="page-customer-mgmt">
+
+  <div class="page-header">
+    <div>
+      <h2>Quản Lý Khách Hàng</h2>
+      <p>Quản lý thông tin và lịch sử khách hàng</p>
+    </div>
+    <button class="btn btn-primary" onclick="openAddCustomer()">➕ Thêm Khách Hàng</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom:20px">
+    <div class="stat-card">
+      <div class="stat-icon blue">👥</div>
+      <div class="stat-info">
+        <div class="label">Tổng Khách Hàng</div>
+        <div class="value">1,284</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon gold">👑</div>
+      <div class="stat-info">
+        <div class="label">Khách VIP</div>
+        <div class="value">142</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">🆕</div>
+      <div class="stat-info">
+        <div class="label">Khách Mới Tháng Này</div>
+        <div class="value">48</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">🔄</div>
+      <div class="stat-info">
+        <div class="label">Tỉ Lệ Quay Lại</div>
+        <div class="value">67%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Filter -->
+  <div class="card" style="margin-bottom:18px">
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+      <input type="text" class="form-control" id="custSearch"
+        placeholder="🔍 Tìm theo tên, điện thoại..." style="flex:1; min-width:200px"
+        oninput="filterCustomers()">
+      <select class="form-control" id="custTierFilter" style="width:160px" onchange="filterCustomers()">
+        <option value="">Tất cả hạng</option>
+        <option value="VIP">👑 VIP</option>
+        <option value="Thân Thiết">⭐ Thân Thiết</option>
+        <option value="Thường">👤 Thường</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Customer Table -->
+  <div class="card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Khách Hàng</th>
+          <th>Điện Thoại</th>
+          <th>Email</th>
+          <th>Hạng</th>
+          <th>Số Lần Đến</th>
+          <th>Lần Cuối</th>
+          <th>Tổng Chi</th>
+          <th>Thao Tác</th>
+        </tr>
+      </thead>
+      <tbody id="custTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Add Customer Modal -->
+  <div class="modal-backdrop" id="custModal" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Thêm Khách Hàng</div>
+        <button class="modal-close" onclick="document.getElementById('custModal').style.display='none'">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Họ Tên *</label>
+          <input type="text" class="form-control" id="custName" placeholder="Nguyễn Văn A">
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Điện Thoại *</label>
+            <input type="tel" class="form-control" id="custPhone" placeholder="0901234567">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" id="custEmail" placeholder="email@example.com">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Ngày Sinh</label>
+            <input type="date" class="form-control" id="custDob">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hạng Thành Viên</label>
+            <select class="form-control" id="custTier">
+              <option value="Thường">👤 Thường</option>
+              <option value="Thân Thiết">⭐ Thân Thiết</option>
+              <option value="VIP">👑 VIP</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ghi Chú</label>
+          <textarea class="form-control" id="custNote" rows="2" placeholder="Sở thích, dị ứng..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="document.getElementById('custModal').style.display='none'">Hủy</button>
+        <button class="btn btn-primary" onclick="saveCustomer()">💾 Lưu</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let customersData = [
+  { id:1, name:'Nguyễn Văn An',    phone:'0901234567', email:'an.nv@email.com',    tier:'VIP',      visits:24, lastVisit:'12/04/2026', totalSpend:18500000 },
+  { id:2, name:'Trần Thị Bình',    phone:'0912345678', email:'binh.tt@email.com',  tier:'Thân Thiết',visits:12, lastVisit:'14/04/2026', totalSpend:7800000  },
+  { id:3, name:'Lê Minh Cường',    phone:'0923456789', email:'cuong.lm@email.com', tier:'Thường',   visits:3,  lastVisit:'10/03/2026', totalSpend:2100000  },
+  { id:4, name:'Phạm Thu Dung',    phone:'0934567890', email:'dung.pt@email.com',  tier:'VIP',      visits:31, lastVisit:'14/04/2026', totalSpend:24200000 },
+  { id:5, name:'Hoàng Văn Em',     phone:'0945678901', email:'em.hv@email.com',    tier:'Thân Thiết',visits:8,  lastVisit:'05/04/2026', totalSpend:5600000  },
+  { id:6, name:'Vũ Thị Lan',       phone:'0956789012', email:'lan.vt@email.com',   tier:'Thường',   visits:1,  lastVisit:'20/03/2026', totalSpend:850000   },
+  { id:7, name:'Bùi Thanh Tú',     phone:'0967890123', email:'tu.bt@email.com',    tier:'VIP',      visits:19, lastVisit:'13/04/2026', totalSpend:14300000 },
+  { id:8, name:'Đinh Thị Nga',     phone:'0978901234', email:'nga.dt@email.com',   tier:'Thân Thiết',visits:6,  lastVisit:'08/04/2026', totalSpend:4200000  },
+];
+
+const tierBadge = { 'VIP':'badge-warning', 'Thân Thiết':'badge-primary', 'Thường':'badge-muted' };
+
+function renderCustomers(data) {
+  document.getElementById('custTableBody').innerHTML = data.map(c => `
+    <tr>
+      <td>
+        <div style="font-weight:600">${c.name}</div>
+      </td>
+      <td>${c.phone}</td>
+      <td style="color:var(--text-muted); font-size:.8rem">${c.email}</td>
+      <td><span class="badge ${tierBadge[c.tier]}">${c.tier}</span></td>
+      <td style="text-align:center">${c.visits}</td>
+      <td style="color:var(--text-muted)">${c.lastVisit}</td>
+      <td style="font-weight:600; color:var(--primary)">${formatCurrency(c.totalSpend)}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" title="Xem lịch sử" onclick="viewCustomer(${c.id})">👁️</button>
+        <button class="btn btn-ghost btn-sm" title="Sửa" onclick="editCust(${c.id})">✏️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterCustomers() {
+  const q    = document.getElementById('custSearch').value.trim().toLowerCase();
+  const tier = document.getElementById('custTierFilter').value;
+  let filtered = customersData;
+  if (q)    filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || c.phone.includes(q));
+  if (tier) filtered = filtered.filter(c => c.tier === tier);
+  renderCustomers(filtered);
+}
+
+function openAddCustomer() {
+  document.getElementById('custModal').style.display = 'flex';
+}
+
+function saveCustomer() {
+  const name  = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  if (!name || !phone) { showToast('Thiếu Thông Tin', 'Tên và điện thoại là bắt buộc', 'warning'); return; }
+  customersData.push({
+    id: customersData.length + 1,
+    name, phone,
+    email:      document.getElementById('custEmail').value,
+    tier:       document.getElementById('custTier').value,
+    visits:     0,
+    lastVisit:  '—',
+    totalSpend: 0,
+  });
+  document.getElementById('custModal').style.display = 'none';
+  filterCustomers();
+  showToast('Đã Thêm', `Khách hàng "${name}" đã được thêm`, 'success');
+}
+
+function viewCustomer(id) {
+  const c = customersData.find(x => x.id === id);
+  if (c) showToast(c.name, `${c.visits} lần ghé • Tổng: ${formatCurrency(c.totalSpend)}`, 'info');
+}
+
+function editCust(id) {
+  showToast('Thông Báo', 'Chức năng sửa đang phát triển', 'info');
+}
+
+// Khởi tạo
+renderCustomers(customersData);
+</script>

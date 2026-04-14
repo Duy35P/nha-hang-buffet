@@ -1,0 +1,91 @@
+<!-- components/order.html - Order page section -->
+<div class="page-section" id="page-order">
+
+  <div class="page-header">
+    <div>
+      <h2>Gọi Món</h2>
+      <p>Thêm đồ uống và món ăn vào order</p>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <label class="form-label" style="margin:0; white-space:nowrap">Bàn:</label>
+      <select class="form-control" id="orderTableSelect" style="width:160px">
+        <option value="">-- Chọn Bàn --</option>
+        <option value="02">Bàn 02 (đang dùng)</option>
+        <option value="04">Bàn 04 (đang dùng)</option>
+        <option value="06">Bàn 06 (đang dùng)</option>
+        <option value="08">Bàn 08 (đang dùng)</option>
+        <option value="11">Bàn 11 (đang dùng)</option>
+        <option value="13">Bàn 13 (đang dùng)</option>
+        <option value="15">Bàn 15 (đang dùng)</option>
+        <option value="17">Bàn 17 (đang dùng)</option>
+        <option value="20">Bàn 20 (đang dùng)</option>
+        <option value="22">Bàn 22 (đang dùng)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="order-layout">
+
+    <!-- Left: Menu -->
+    <div>
+      <!-- Category Filter -->
+      <div class="menu-categories">
+        <button class="cat-btn active" data-cat="all" onclick="filterCat('all')">🍽️ Tất Cả</button>
+        <button class="cat-btn" data-cat="nuoc" onclick="filterCat('nuoc')">💧 Nước</button>
+        <button class="cat-btn" data-cat="bia" onclick="filterCat('bia')">🍺 Bia</button>
+        <button class="cat-btn" data-cat="ruou" onclick="filterCat('ruou')">🍷 Rượu</button>
+        <button class="cat-btn" data-cat="khai-vi" onclick="filterCat('khai-vi')">🥗 Khai Vị</button>
+        <button class="cat-btn" data-cat="trang-mien" onclick="filterCat('trang-mien')">🍨 Tráng Miệng</button>
+      </div>
+
+      <!-- Menu Grid -->
+      <div class="menu-grid" id="menuGrid">
+        <!-- Populated by order.js renderMenuItems() -->
+      </div>
+    </div>
+
+    <!-- Right: Basket -->
+    <div class="order-basket">
+      <div class="basket-header">
+        <div class="basket-title">🛒 Order</div>
+        <div class="basket-table-badge" id="basketCount">0 món</div>
+      </div>
+
+      <div class="basket-items" id="basketItems">
+        <div class="empty-state">
+          <div class="empty-icon">🛒</div>
+          <p>Chưa có món nào<br>Chọn món từ menu bên trái</p>
+        </div>
+      </div>
+
+      <div class="basket-footer">
+        <div class="basket-total-row">
+          <span>Tạm Tính</span>
+          <span id="basketSubtotal">0 ₫</span>
+        </div>
+        <div class="basket-total-row">
+          <span>Thuế VAT (8%)</span>
+          <span>Đã bao gồm</span>
+        </div>
+        <div class="basket-total-row grand">
+          <span>Tổng Cộng</span>
+          <span class="amount" id="basketTotal">0 ₫</span>
+        </div>
+        <button class="btn btn-primary btn-block" style="margin-top:12px" onclick="submitOrder()">
+          📤 Gửi Order
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// Khởi tạo menu khi trang order được load
+(function() {
+  if (typeof renderMenuItems === 'function') {
+    renderMenuItems(menuData);
+  }
+})();
+</script>

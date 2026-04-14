@@ -1,0 +1,192 @@
+<!-- components/promotion-apply.html - Promotion apply page section -->
+<div class="page-section" id="page-promotion-apply">
+
+  <div class="page-header">
+    <div>
+      <h2>Áp Dụng Khuyến Mãi</h2>
+      <p>Áp dụng mã hoặc chương trình khuyến mãi cho đơn hàng</p>
+    </div>
+  </div>
+
+  <div class="grid-2" style="align-items:start">
+
+    <!-- Apply Form -->
+    <div class="card">
+      <div class="card-title">🏷️ Nhập Mã Khuyến Mãi</div>
+
+      <div class="form-group">
+        <label class="form-label">Số Bàn</label>
+        <select class="form-control" id="promoTable">
+          <option value="">-- Chọn bàn --</option>
+          <option value="02">Bàn 02</option>
+          <option value="04">Bàn 04</option>
+          <option value="06">Bàn 06</option>
+          <option value="08">Bàn 08</option>
+          <option value="11">Bàn 11</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Mã Khuyến Mãi</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" class="form-control" id="promoCode"
+            placeholder="Nhập mã (vd: GIAM10)" style="text-transform:uppercase">
+          <button class="btn btn-primary" onclick="checkPromoCode()">Kiểm Tra</button>
+        </div>
+      </div>
+
+      <!-- Promo result -->
+      <div id="promoResult" style="display:none">
+        <div class="alert alert-success" id="promoAlert"></div>
+        <button class="btn btn-success btn-block" onclick="applyPromo()">
+          ✅ Áp Dụng Vào Đơn Hàng
+        </button>
+      </div>
+
+      <hr class="divider">
+
+      <div class="card-title">🎁 Chương Trình Đang Áp Dụng</div>
+      <div style="display:flex; flex-direction:column; gap:10px;" id="activePromos">
+        <div style="padding:12px; border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; gap:12px; cursor:pointer"
+             onclick="quickApply('BIRTHDAY')">
+          <span style="font-size:1.6rem">🎂</span>
+          <div style="flex:1">
+            <div style="font-weight:600; font-size:.88rem">Sinh Nhật Đặc Biệt</div>
+            <div style="font-size:.76rem; color:var(--text-muted)">Giảm 15% cho khách sinh nhật • Mã: BIRTHDAY</div>
+          </div>
+          <span class="badge badge-success">Đang chạy</span>
+        </div>
+        <div style="padding:12px; border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; gap:12px; cursor:pointer"
+             onclick="quickApply('GIAM10')">
+          <span style="font-size:1.6rem">🏷️</span>
+          <div style="flex:1">
+            <div style="font-weight:600; font-size:.88rem">Giảm 10% Cuối Tuần</div>
+            <div style="font-size:.76rem; color:var(--text-muted)">Giảm 10% cho đơn từ 500k • Mã: GIAM10</div>
+          </div>
+          <span class="badge badge-success">Đang chạy</span>
+        </div>
+        <div style="padding:12px; border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; gap:12px; cursor:pointer"
+             onclick="quickApply('VIP15')">
+          <span style="font-size:1.6rem">👑</span>
+          <div style="flex:1">
+            <div style="font-weight:600; font-size:.88rem">Khách Hàng VIP</div>
+            <div style="font-size:.76rem; color:var(--text-muted)">Giảm 15% dành riêng khách VIP • Mã: VIP15</div>
+          </div>
+          <span class="badge badge-warning">Điều kiện</span>
+        </div>
+        <div style="padding:12px; border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; gap:12px; cursor:pointer"
+             onclick="quickApply('BUFFET20')">
+          <span style="font-size:1.6rem">🎊</span>
+          <div style="flex:1">
+            <div style="font-weight:600; font-size:.88rem">Khai Trương 20%</div>
+            <div style="font-size:.76rem; color:var(--text-muted)">Kỷ niệm 5 năm — Giảm 20% • Mã: BUFFET20</div>
+          </div>
+          <span class="badge badge-danger">Sắp hết hạn</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Usage History -->
+    <div class="card">
+      <div class="card-title">📊 Lịch Sử Áp Dụng Hôm Nay</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Giờ</th>
+            <th>Bàn</th>
+            <th>Mã KM</th>
+            <th>Giảm</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>13:25</td>
+            <td>Bàn 08</td>
+            <td><code>GIAM10</code></td>
+            <td style="color:var(--success)">−145,000 ₫</td>
+          </tr>
+          <tr>
+            <td>12:50</td>
+            <td>Bàn 11</td>
+            <td><code>BIRTHDAY</code></td>
+            <td style="color:var(--success)">−202,500 ₫</td>
+          </tr>
+          <tr>
+            <td>12:10</td>
+            <td>Bàn 04</td>
+            <td><code>VIP15</code></td>
+            <td style="color:var(--success)">−337,500 ₫</td>
+          </tr>
+          <tr>
+            <td>11:45</td>
+            <td>Bàn 02</td>
+            <td><code>GIAM10</code></td>
+            <td style="color:var(--success)">−119,600 ₫</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr class="divider">
+      <div class="card-title">💰 Tổng Giảm Hôm Nay</div>
+      <div class="stat-card" style="box-shadow:none; border-color:var(--accent-light)">
+        <div class="stat-icon gold">🏷️</div>
+        <div class="stat-info">
+          <div class="label">Tổng Đã Giảm</div>
+          <div class="value" style="color:var(--success)">804,600 ₫</div>
+          <div class="change">Từ 12 đơn áp dụng KM</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const promoCodes = {
+  'GIAM10':   { discount: 10, desc: 'Giảm 10% cuối tuần', type: 'percent' },
+  'BIRTHDAY': { discount: 15, desc: 'Khách hàng sinh nhật — giảm 15%', type: 'percent' },
+  'VIP15':    { discount: 15, desc: 'Khách hàng VIP — giảm 15%', type: 'percent' },
+  'BUFFET20': { discount: 20, desc: 'Kỷ niệm 5 năm — giảm 20%', type: 'percent' },
+};
+
+window._selectedPromo = null;
+
+function checkPromoCode() {
+  const code = document.getElementById('promoCode').value.trim().toUpperCase();
+  if (!code) { showToast('Chưa Nhập Mã', 'Vui lòng nhập mã khuyến mãi', 'warning'); return; }
+
+  const promo = promoCodes[code];
+  const resultDiv = document.getElementById('promoResult');
+  const alertDiv  = document.getElementById('promoAlert');
+
+  if (promo) {
+    alertDiv.innerHTML = `<strong>✅ Mã hợp lệ!</strong> ${promo.desc} — Giảm <strong>${promo.discount}%</strong>`;
+    resultDiv.style.display = 'block';
+    window._selectedPromo = { code, ...promo };
+  } else {
+    resultDiv.style.display = 'none';
+    showToast('Mã Không Hợp Lệ', 'Mã khuyến mãi không đúng hoặc đã hết hạn', 'danger');
+    window._selectedPromo = null;
+  }
+}
+
+function applyPromo() {
+  const table = document.getElementById('promoTable').value;
+  if (!table)  { showToast('Chưa Chọn Bàn', 'Vui lòng chọn số bàn', 'warning'); return; }
+  if (!window._selectedPromo) return;
+
+  showToast('Áp Dụng Thành Công! 🎉',
+    `Mã ${window._selectedPromo.code} đã áp dụng cho Bàn ${table} — Giảm ${window._selectedPromo.discount}%`,
+    'success');
+  document.getElementById('promoResult').style.display = 'none';
+  document.getElementById('promoCode').value  = '';
+  document.getElementById('promoTable').value = '';
+  window._selectedPromo = null;
+}
+
+function quickApply(code) {
+  document.getElementById('promoCode').value = code;
+  checkPromoCode();
+}
+</script>

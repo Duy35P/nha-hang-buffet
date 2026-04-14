@@ -1,0 +1,252 @@
+<!-- components/payment.html - Payment page section -->
+<div class="page-section" id="page-payment">
+
+  <div class="page-header">
+    <div>
+      <h2>Thanh Toán</h2>
+      <p>Xử lý thanh toán và xuất hóa đơn</p>
+    </div>
+  </div>
+
+  <div class="payment-layout">
+
+    <!-- Left: Invoice -->
+    <div>
+      <div class="card">
+        <div class="card-title">🔍 Chọn Bàn Cần Thanh Toán</div>
+        <div style="display:flex; gap:10px; margin-bottom:16px;">
+          <select class="form-control" id="paymentTableSelect">
+            <option value="">-- Chọn bàn đang có khách --</option>
+            <option value="02">Bàn 02 — 4 khách (12:30 vào)</option>
+            <option value="04">Bàn 04 — 6 khách (11:15 vào)</option>
+            <option value="06">Bàn 06 — 2 khách (13:00 vào)</option>
+            <option value="08">Bàn 08 — 4 khách (12:00 vào)</option>
+            <option value="11">Bàn 11 — 8 khách (10:30 vào)</option>
+          </select>
+          <button class="btn btn-primary" onclick="loadPaymentBill()">📋 Xem Hóa Đơn</button>
+        </div>
+      </div>
+
+      <!-- Invoice Detail -->
+      <div class="card" id="invoiceCard" style="margin-top:18px; display:none">
+        <div class="card-title">🧾 Hóa Đơn — Bàn <span id="invoiceTableNum">—</span></div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+          <div>
+            <div class="info-row"><span class="lbl">Khách Hàng</span><span class="val" id="invoiceCustomer">—</span></div>
+            <div class="info-row"><span class="lbl">Số Khách</span><span class="val" id="invoiceGuests">—</span></div>
+            <div class="info-row"><span class="lbl">Gói Buffet</span><span class="val" id="invoicePackage">—</span></div>
+          </div>
+          <div>
+            <div class="info-row"><span class="lbl">Giờ Vào</span><span class="val" id="invoiceCheckin">—</span></div>
+            <div class="info-row"><span class="lbl">Giờ Ra</span><span class="val" id="invoiceCheckout">—</span></div>
+            <div class="info-row"><span class="lbl">Thời Gian</span><span class="val" id="invoiceDuration">—</span></div>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Hạng Mục</th>
+              <th style="text-align:right">Số Lượng</th>
+              <th style="text-align:right">Đơn Giá</th>
+              <th style="text-align:right">Thành Tiền</th>
+            </tr>
+          </thead>
+          <tbody id="invoiceItems">
+          </tbody>
+        </table>
+
+        <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border);">
+          <div class="basket-total-row">
+            <span>Tiền Buffet</span>
+            <span id="payBuffet">—</span>
+          </div>
+          <div class="basket-total-row">
+            <span>Tiền Order Thêm</span>
+            <span id="payOrder">—</span>
+          </div>
+          <div class="basket-total-row">
+            <span>Giảm Giá</span>
+            <span id="payDiscount" style="color:var(--success)">0 ₫</span>
+          </div>
+          <div class="basket-total-row">
+            <span>Thuế VAT (8%)</span>
+            <span id="payVat">—</span>
+          </div>
+          <div class="basket-total-row grand">
+            <span>Tổng Thanh Toán</span>
+            <span class="amount" id="payTotal">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Payment Method -->
+    <div>
+      <div class="card">
+        <div class="card-title">💳 Phương Thức Thanh Toán</div>
+
+        <div class="form-group">
+          <label class="form-label">Hình Thức</label>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px">
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:12px; border:1.5px solid var(--border); border-radius:8px; transition:var(--transition)"
+                   onclick="setPayMethod(this, 'cash')">
+              <input type="radio" name="payMethod" value="cash" style="accent-color:var(--primary)">
+              <span style="font-size:1.3rem">💵</span>
+              <span style="font-weight:500">Tiền Mặt</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:12px; border:1.5px solid var(--border); border-radius:8px; transition:var(--transition)"
+                   onclick="setPayMethod(this, 'card')">
+              <input type="radio" name="payMethod" value="card" style="accent-color:var(--primary)">
+              <span style="font-size:1.3rem">💳</span>
+              <span style="font-weight:500">Thẻ Ngân Hàng</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:12px; border:1.5px solid var(--border); border-radius:8px; transition:var(--transition)"
+                   onclick="setPayMethod(this, 'vnpay')">
+              <input type="radio" name="payMethod" value="vnpay" style="accent-color:var(--primary)">
+              <span style="font-size:1.3rem">📱</span>
+              <span style="font-weight:500">VNPay / QR Code</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:12px; border:1.5px solid var(--border); border-radius:8px; transition:var(--transition)"
+                   onclick="setPayMethod(this, 'momo')">
+              <input type="radio" name="payMethod" value="momo" style="accent-color:var(--primary)">
+              <span style="font-size:1.3rem">💜</span>
+              <span style="font-weight:500">MoMo</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group" id="cashChange" style="display:none">
+          <label class="form-label">Tiền Khách Đưa</label>
+          <input type="number" class="form-control" id="cashReceived"
+            placeholder="Nhập số tiền" oninput="calcChange()">
+          <div style="margin-top:8px; padding:10px; background:var(--bg2); border-radius:8px; display:flex; justify-content:space-between;">
+            <span style="font-size:.85rem; color:var(--text-muted)">Tiền Thối</span>
+            <strong id="changeAmount" style="color:var(--success)">0 ₫</strong>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mã Khuyến Mãi</label>
+          <div style="display:flex; gap:8px;">
+            <input type="text" class="form-control" id="promoCodePay" placeholder="Nhập mã KM">
+            <button class="btn btn-ghost btn-sm" onclick="applyPromoCode()">Áp Dụng</button>
+          </div>
+        </div>
+
+        <button class="btn btn-success btn-block btn-lg" onclick="processPayment()">
+          ✅ Hoàn Tất Thanh Toán
+        </button>
+
+        <button class="btn btn-ghost btn-block" style="margin-top:8px" onclick="printInvoice()">
+          🖨️ In Hóa Đơn
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const mockBills = {
+  '02': { customer:'Trần Thị Bình', guests:4, package:'Buffet Tiêu Chuẩn', checkin:'12:30', checkout:'15:00', duration:'2h30', pricePerPerson:299000,
+          orderItems:[
+            {name:'Bia Tiger', qty:4, price:35000},
+            {name:'Nước Ép Cam', qty:2, price:45000},
+            {name:'Pepsi / 7Up', qty:3, price:25000},
+          ]},
+  '04': { customer:'Lê Hoài Nam', guests:6, package:'Buffet Cao Cấp', checkin:'11:15', checkout:'14:00', duration:'2h45', pricePerPerson:449000,
+          orderItems:[
+            {name:'Bia Heineken', qty:6, price:40000},
+            {name:'Rượu Vang Đỏ', qty:1, price:350000},
+            {name:'Sinh Tố Xoài', qty:3, price:55000},
+          ]},
+};
+
+function loadPaymentBill() {
+  const tableNum = document.getElementById('paymentTableSelect').value;
+  if (!tableNum) { showToast('Chưa Chọn Bàn', 'Vui lòng chọn bàn cần thanh toán', 'warning'); return; }
+
+  const bill = mockBills[tableNum];
+  if (!bill) { showToast('Không Có Dữ Liệu', 'Bàn này chưa có dữ liệu', 'danger'); return; }
+
+  document.getElementById('invoiceTableNum').textContent = tableNum;
+  document.getElementById('invoiceCustomer').textContent = bill.customer;
+  document.getElementById('invoiceGuests').textContent   = bill.guests + ' người';
+  document.getElementById('invoicePackage').textContent  = bill.package;
+  document.getElementById('invoiceCheckin').textContent  = bill.checkin;
+  document.getElementById('invoiceCheckout').textContent = bill.checkout;
+  document.getElementById('invoiceDuration').textContent = bill.duration;
+
+  const buffetTotal = bill.pricePerPerson * bill.guests;
+  const orderTotal  = bill.orderItems.reduce((s,i) => s + i.price * i.qty, 0);
+  const subtotal    = buffetTotal + orderTotal;
+  const vat         = Math.round(subtotal * 0.08);
+  const total       = subtotal + vat;
+
+  // Render invoice items
+  document.getElementById('invoiceItems').innerHTML = [
+    `<tr><td>${bill.package}</td><td style="text-align:right">${bill.guests} người</td><td style="text-align:right">${formatCurrency(bill.pricePerPerson)}</td><td style="text-align:right"><strong>${formatCurrency(buffetTotal)}</strong></td></tr>`,
+    ...bill.orderItems.map(i => `<tr><td>${i.name}</td><td style="text-align:right">x${i.qty}</td><td style="text-align:right">${formatCurrency(i.price)}</td><td style="text-align:right">${formatCurrency(i.price * i.qty)}</td></tr>`)
+  ].join('');
+
+  document.getElementById('payBuffet').textContent   = formatCurrency(buffetTotal);
+  document.getElementById('payOrder').textContent    = formatCurrency(orderTotal);
+  document.getElementById('payVat').textContent      = formatCurrency(vat);
+  document.getElementById('payTotal').textContent    = formatCurrency(total);
+  document.getElementById('invoiceCard').style.display = 'block';
+
+  // Store total for cash change calc
+  window._payTotal = total;
+}
+
+function setPayMethod(label, method) {
+  document.querySelectorAll('[onclick^="setPayMethod"]').forEach(l => {
+    l.style.borderColor = 'var(--border)';
+    l.style.background  = '';
+  });
+  label.style.borderColor = 'var(--primary)';
+  label.style.background  = 'rgba(107,45,62,.05)';
+  document.getElementById('cashChange').style.display = method === 'cash' ? 'block' : 'none';
+}
+
+function calcChange() {
+  const received = parseFloat(document.getElementById('cashReceived').value) || 0;
+  const change   = received - (window._payTotal || 0);
+  document.getElementById('changeAmount').textContent = formatCurrency(Math.max(0, change));
+}
+
+function applyPromoCode() {
+  const code = document.getElementById('promoCodePay').value.trim().toUpperCase();
+  if (!code) return;
+  const promos = { 'GIAM10': 10, 'BUFFET20': 20, 'VIP15': 15 };
+  const pct = promos[code];
+  if (pct) {
+    const discount = Math.round((window._payTotal || 0) * pct / 100);
+    document.getElementById('payDiscount').textContent = '−' + formatCurrency(discount);
+    const newTotal = (window._payTotal || 0) - discount;
+    document.getElementById('payTotal').textContent = formatCurrency(newTotal);
+    window._payTotal = newTotal;
+    showToast('Áp Dụng Thành Công!', `Giảm ${pct}% — Tiết kiệm ${formatCurrency(discount)}`, 'success');
+  } else {
+    showToast('Mã Không Hợp Lệ', 'Mã khuyến mãi không đúng hoặc đã hết hạn', 'danger');
+  }
+}
+
+function processPayment() {
+  const tableNum = document.getElementById('paymentTableSelect').value;
+  if (!tableNum) { showToast('Chưa Chọn Bàn', 'Vui lòng tải hóa đơn trước', 'warning'); return; }
+  const method = document.querySelector('input[name="payMethod"]:checked');
+  if (!method) { showToast('Chưa Chọn Phương Thức', 'Chọn hình thức thanh toán', 'warning'); return; }
+  showToast('Thanh Toán Thành Công! 🎉', `Bàn ${tableNum} — ${formatCurrency(window._payTotal || 0)} (${method.value.toUpperCase()})`, 'success');
+  document.getElementById('invoiceCard').style.display = 'none';
+  document.getElementById('paymentTableSelect').value = '';
+  window._payTotal = 0;
+}
+
+function printInvoice() {
+  showToast('Đang In', 'Hóa đơn đang được gửi đến máy in...', 'info', 2000);
+}
+</script>

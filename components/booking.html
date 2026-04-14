@@ -1,0 +1,186 @@
+<!-- components/booking.html - Booking page section -->
+<div class="page-section" id="page-booking">
+
+  <div class="page-header">
+    <div>
+      <h2>Đặt Bàn</h2>
+      <p>Tạo đặt bàn mới cho khách hàng</p>
+    </div>
+  </div>
+
+  <div class="grid-2" style="align-items:start">
+
+    <!-- Booking Form -->
+    <div class="card">
+      <div class="card-title">📝 Thông Tin Đặt Bàn</div>
+
+      <div class="form-group">
+        <label class="form-label">Họ Tên Khách Hàng *</label>
+        <input type="text" class="form-control" id="bookingName" placeholder="Nguyễn Văn A">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Số Điện Thoại *</label>
+        <input type="tel" class="form-control" id="bookingPhone" placeholder="0901234567">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" id="bookingEmail" placeholder="email@example.com">
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Ngày Đặt *</label>
+          <input type="date" class="form-control" id="bookingDate">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Giờ Đến *</label>
+          <input type="time" class="form-control" id="bookingTime" value="12:00">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Số Khách *</label>
+          <input type="number" class="form-control" id="bookingGuests" min="1" max="50" placeholder="4">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Khu Vực</label>
+          <select class="form-control" id="bookingZone">
+            <option value="">-- Chọn khu vực --</option>
+            <option value="A">Khu A — Phòng Chính</option>
+            <option value="B">Khu B — Phòng VIP</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Loại Tiệc</label>
+        <select class="form-control" id="bookingType">
+          <option value="normal">Bữa Thường</option>
+          <option value="birthday">Sinh Nhật 🎂</option>
+          <option value="anniversary">Kỷ Niệm ❤️</option>
+          <option value="corporate">Tiệc Công Ty 🏢</option>
+          <option value="other">Khác</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ghi Chú</label>
+        <textarea class="form-control" id="bookingNote" rows="3"
+          placeholder="Yêu cầu đặc biệt, dị ứng thực phẩm..."></textarea>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:8px;">
+        <button class="btn btn-primary" style="flex:1" onclick="submitBooking()">
+          📅 Xác Nhận Đặt Bàn
+        </button>
+        <button class="btn btn-ghost" onclick="resetBookingForm()">
+          🔄 Làm Mới
+        </button>
+      </div>
+    </div>
+
+    <!-- Booking Summary & Recent Bookings -->
+    <div style="display:flex; flex-direction:column; gap:18px;">
+
+      <div class="card">
+        <div class="card-title">📊 Tóm Tắt Hôm Nay</div>
+        <div class="info-row">
+          <span class="lbl">Tổng Đặt Bàn</span>
+          <span class="val">32</span>
+        </div>
+        <div class="info-row">
+          <span class="lbl">Đã Xác Nhận</span>
+          <span class="val" style="color:var(--success)">24</span>
+        </div>
+        <div class="info-row">
+          <span class="lbl">Chờ Xác Nhận</span>
+          <span class="val" style="color:var(--warning)">5</span>
+        </div>
+        <div class="info-row">
+          <span class="lbl">Đã Hủy</span>
+          <span class="val" style="color:var(--danger)">3</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📋 Đặt Bàn Gần Đây</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Mã</th>
+              <th>Tên</th>
+              <th>Giờ</th>
+              <th>Trạng Thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#BK032</td>
+              <td>Hoàng Em</td>
+              <td>18:00</td>
+              <td><span class="badge badge-warning">Chờ</span></td>
+            </tr>
+            <tr>
+              <td>#BK031</td>
+              <td>Vũ Thủy</td>
+              <td>17:30</td>
+              <td><span class="badge badge-success">OK</span></td>
+            </tr>
+            <tr>
+              <td>#BK030</td>
+              <td>Đỗ Hùng</td>
+              <td>15:00</td>
+              <td><span class="badge badge-success">OK</span></td>
+            </tr>
+            <tr>
+              <td>#BK029</td>
+              <td>Mai Lan</td>
+              <td>12:30</td>
+              <td><span class="badge badge-info">Check-in</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Khởi tạo ngày mặc định khi trang booking load
+(function() {
+  const dateInput = document.getElementById('bookingDate');
+  if (dateInput) dateInput.value = todayISO();
+})();
+
+function submitBooking() {
+  const name   = document.getElementById('bookingName').value.trim();
+  const phone  = document.getElementById('bookingPhone').value.trim();
+  const date   = document.getElementById('bookingDate').value;
+  const time   = document.getElementById('bookingTime').value;
+  const guests = document.getElementById('bookingGuests').value;
+
+  if (!name || !phone || !date || !time || !guests) {
+    showToast('Thiếu Thông Tin', 'Vui lòng điền đầy đủ các trường bắt buộc (*)', 'warning');
+    return;
+  }
+
+  const bookingId = generateId('BK');
+  showToast('Đặt Bàn Thành Công!', `Mã đặt bàn: #${bookingId} — ${name} lúc ${time}`, 'success');
+  resetBookingForm();
+}
+
+function resetBookingForm() {
+  ['bookingName','bookingPhone','bookingEmail','bookingGuests','bookingNote'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const dateInput = document.getElementById('bookingDate');
+  if (dateInput) dateInput.value = todayISO();
+  document.getElementById('bookingTime').value = '12:00';
+}
+</script>

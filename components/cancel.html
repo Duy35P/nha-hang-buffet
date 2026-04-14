@@ -1,0 +1,167 @@
+<!-- components/cancel.html - Cancel booking page section -->
+<div class="page-section" id="page-cancel">
+
+  <div class="page-header">
+    <div>
+      <h2>Hủy Đặt Bàn</h2>
+      <p>Xử lý yêu cầu hủy đặt bàn của khách hàng</p>
+    </div>
+  </div>
+
+  <div class="grid-2" style="align-items:start">
+
+    <!-- Cancel Form -->
+    <div class="card">
+      <div class="card-title">🔍 Tìm Đặt Bàn Cần Hủy</div>
+
+      <div class="form-group">
+        <label class="form-label">Mã Đặt Bàn hoặc Số Điện Thoại</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" class="form-control" id="cancelSearch"
+            placeholder="#BK001 hoặc 0901234567">
+          <button class="btn btn-primary" onclick="searchBooking()">🔍</button>
+        </div>
+      </div>
+
+      <!-- Booking found result -->
+      <div id="cancelBookingResult" style="display:none">
+        <hr class="divider">
+        <div class="info-panel">
+          <div class="info-panel-title">📋 Thông Tin Đặt Bàn</div>
+          <div class="info-row"><span class="lbl">Mã Đặt Bàn</span><span class="val" id="cBkId">—</span></div>
+          <div class="info-row"><span class="lbl">Khách Hàng</span><span class="val" id="cBkName">—</span></div>
+          <div class="info-row"><span class="lbl">Số Điện Thoại</span><span class="val" id="cBkPhone">—</span></div>
+          <div class="info-row"><span class="lbl">Ngày Giờ</span><span class="val" id="cBkDateTime">—</span></div>
+          <div class="info-row"><span class="lbl">Số Bàn</span><span class="val" id="cBkTable">—</span></div>
+          <div class="info-row"><span class="lbl">Số Khách</span><span class="val" id="cBkGuests">—</span></div>
+          <div class="info-row"><span class="lbl">Trạng Thái</span><span class="val" id="cBkStatus">—</span></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Lý Do Hủy *</label>
+          <select class="form-control" id="cancelReason">
+            <option value="">-- Chọn lý do --</option>
+            <option value="busy">Khách bận việc đột xuất</option>
+            <option value="sick">Khách bệnh</option>
+            <option value="changed">Thay đổi kế hoạch</option>
+            <option value="duplicate">Đặt trùng</option>
+            <option value="other">Lý do khác</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Ghi Chú Thêm</label>
+          <textarea class="form-control" id="cancelNote" rows="2"
+            placeholder="Chi tiết lý do hủy..."></textarea>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-danger" style="flex:1" onclick="confirmCancel()">
+            ❌ Xác Nhận Hủy
+          </button>
+          <button class="btn btn-ghost" onclick="clearCancelForm()">
+            Bỏ Qua
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Recently Cancelled -->
+    <div class="card">
+      <div class="card-title">📋 Danh Sách Hủy Gần Đây</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Mã</th>
+            <th>Khách Hàng</th>
+            <th>Bàn</th>
+            <th>Thời Gian</th>
+            <th>Lý Do</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#BK028</td>
+            <td>Vũ Thị Lan</td>
+            <td>Bàn 11</td>
+            <td>08:58</td>
+            <td><span class="badge badge-muted">Bận</span></td>
+          </tr>
+          <tr>
+            <td>#BK022</td>
+            <td>Trần Đức Thắng</td>
+            <td>Bàn 07</td>
+            <td>Hôm qua</td>
+            <td><span class="badge badge-muted">Bệnh</span></td>
+          </tr>
+          <tr>
+            <td>#BK019</td>
+            <td>Ngô Thị Hoa</td>
+            <td>Bàn 03</td>
+            <td>Hôm qua</td>
+            <td><span class="badge badge-muted">Đặt trùng</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// Mock data đặt bàn để demo
+const mockBookings = [
+  { id:'#BK001', name:'Nguyễn Văn An',    phone:'0901234567', datetime:'14/04/2026 11:30', table:'Bàn 05', guests:4, status:'Đã xác nhận' },
+  { id:'#BK002', name:'Trần Thị Bình',    phone:'0912345678', datetime:'14/04/2026 12:00', table:'Bàn 08', guests:2, status:'Đã xác nhận' },
+  { id:'#BK003', name:'Lê Minh Cường',    phone:'0923456789', datetime:'14/04/2026 12:30', table:'Bàn 12', guests:6, status:'Đã xác nhận' },
+  { id:'#BK004', name:'Phạm Thu Dung',    phone:'0934567890', datetime:'14/04/2026 13:00', table:'Bàn 03', guests:3, status:'Check-in'     },
+  { id:'#BK005', name:'Hoàng Văn Em',     phone:'0945678901', datetime:'14/04/2026 18:00', table:'Bàn 15', guests:5, status:'Chờ xác nhận' },
+];
+
+function searchBooking() {
+  const q = document.getElementById('cancelSearch').value.trim().toLowerCase();
+  if (!q) {
+    showToast('Vui Lòng Nhập', 'Nhập mã đặt bàn hoặc số điện thoại để tìm kiếm', 'warning');
+    return;
+  }
+
+  const bk = mockBookings.find(b =>
+    b.id.toLowerCase().includes(q) || b.phone.includes(q)
+  );
+
+  if (!bk) {
+    showToast('Không Tìm Thấy', 'Không có đặt bàn nào khớp với từ khóa này', 'danger');
+    document.getElementById('cancelBookingResult').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('cBkId').textContent       = bk.id;
+  document.getElementById('cBkName').textContent     = bk.name;
+  document.getElementById('cBkPhone').textContent    = bk.phone;
+  document.getElementById('cBkDateTime').textContent = bk.datetime;
+  document.getElementById('cBkTable').textContent    = bk.table;
+  document.getElementById('cBkGuests').textContent   = bk.guests + ' người';
+  document.getElementById('cBkStatus').textContent   = bk.status;
+  document.getElementById('cancelBookingResult').style.display = 'block';
+}
+
+function confirmCancel() {
+  const reason = document.getElementById('cancelReason').value;
+  if (!reason) {
+    showToast('Chưa Chọn Lý Do', 'Vui lòng chọn lý do hủy', 'warning');
+    return;
+  }
+  const id = document.getElementById('cBkId').textContent;
+  showToast('Hủy Thành Công', `Đặt bàn ${id} đã được hủy`, 'success');
+  clearCancelForm();
+}
+
+function clearCancelForm() {
+  document.getElementById('cancelSearch').value = '';
+  document.getElementById('cancelBookingResult').style.display = 'none';
+  document.getElementById('cancelReason').value = '';
+  document.getElementById('cancelNote').value = '';
+}
+</script>

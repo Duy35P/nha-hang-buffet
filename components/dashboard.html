@@ -1,0 +1,160 @@
+<!-- components/dashboard.html - Dashboard page section -->
+<div class="page-section" id="page-dashboard">
+
+  <div class="page-header">
+    <div>
+      <h2>Tổng Quan Hôm Nay</h2>
+      <p>Thứ Hai, 14/04/2026</p>
+    </div>
+    <button class="btn btn-primary" onclick="showPage('booking')">
+      ➕ Đặt Bàn Mới
+    </button>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon gold">💰</div>
+      <div class="stat-info">
+        <div class="label">Doanh Thu Hôm Nay</div>
+        <div class="value">24,500,000 ₫</div>
+        <div class="change up">▲ +12% so với hôm qua</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">👥</div>
+      <div class="stat-info">
+        <div class="label">Lượt Khách</div>
+        <div class="value">186</div>
+        <div class="change up">▲ +8 so với hôm qua</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">🪑</div>
+      <div class="stat-info">
+        <div class="label">Bàn Đang Sử Dụng</div>
+        <div class="value">14/24</div>
+        <div class="change">58% công suất</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue">📋</div>
+      <div class="stat-info">
+        <div class="label">Đặt Bàn Hôm Nay</div>
+        <div class="value">32</div>
+        <div class="change down">▼ -3 so với hôm qua</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="grid-2">
+
+    <!-- Booking Status -->
+    <div class="card">
+      <div class="card-title">📅 Đặt Bàn Sắp Tới</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Mã</th>
+            <th>Khách Hàng</th>
+            <th>Giờ</th>
+            <th>Bàn</th>
+            <th>Trạng Thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>#BK001</strong></td>
+            <td>Nguyễn Văn An</td>
+            <td>11:30</td>
+            <td>Bàn 05</td>
+            <td><span class="badge badge-warning">Chờ xác nhận</span></td>
+          </tr>
+          <tr>
+            <td><strong>#BK002</strong></td>
+            <td>Trần Thị Bình</td>
+            <td>12:00</td>
+            <td>Bàn 08</td>
+            <td><span class="badge badge-success">Đã xác nhận</span></td>
+          </tr>
+          <tr>
+            <td><strong>#BK003</strong></td>
+            <td>Lê Minh Cường</td>
+            <td>12:30</td>
+            <td>Bàn 12</td>
+            <td><span class="badge badge-success">Đã xác nhận</span></td>
+          </tr>
+          <tr>
+            <td><strong>#BK004</strong></td>
+            <td>Phạm Thu Dung</td>
+            <td>13:00</td>
+            <td>Bàn 03</td>
+            <td><span class="badge badge-info">Check-in</span></td>
+          </tr>
+          <tr>
+            <td><strong>#BK005</strong></td>
+            <td>Hoàng Văn Em</td>
+            <td>18:00</td>
+            <td>Bàn 15</td>
+            <td><span class="badge badge-muted">Chưa tới</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card">
+      <div class="card-title">⏱️ Hoạt Động Gần Đây</div>
+      <ul class="timeline">
+        <li class="timeline-item">
+          <div class="timeline-time">09:42</div>
+          <div class="timeline-text">Check-in thành công</div>
+          <div class="timeline-sub">Bàn 05 — Nguyễn Văn An (4 người)</div>
+        </li>
+        <li class="timeline-item">
+          <div class="timeline-time">09:35</div>
+          <div class="timeline-text">Order mới — Bàn 08</div>
+          <div class="timeline-sub">Bia Tiger x2, Nước Ép Cam x3, Trà Đào x1</div>
+        </li>
+        <li class="timeline-item">
+          <div class="timeline-time">09:20</div>
+          <div class="timeline-text">Thanh toán hoàn tất</div>
+          <div class="timeline-sub">Bàn 02 — 1,450,000 ₫ (VNPay)</div>
+        </li>
+        <li class="timeline-item">
+          <div class="timeline-time">09:15</div>
+          <div class="timeline-text">Đặt bàn mới #BK032</div>
+          <div class="timeline-sub">Bàn 15 — Hoàng Văn Em (2 người), 18:00</div>
+        </li>
+        <li class="timeline-item">
+          <div class="timeline-time">08:58</div>
+          <div class="timeline-text">Hủy đặt bàn #BK028</div>
+          <div class="timeline-sub">Bàn 11 — Vũ Thị Lan (lý do: bận)</div>
+        </li>
+        <li class="timeline-item">
+          <div class="timeline-time">08:30</div>
+          <div class="timeline-text">Ca làm việc bắt đầu</div>
+          <div class="timeline-sub">7 nhân viên đã check-in</div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Table Status Overview -->
+  <div class="card" style="margin-top:20px">
+    <div class="card-title">🗺️ Tình Trạng Bàn Nhanh</div>
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <div class="legend-item"><div class="legend-dot available"></div>Trống (10 bàn)</div>
+      <div class="legend-item"><div class="legend-dot occupied"></div>Đang sử dụng (14 bàn)</div>
+      <div class="legend-item"><div class="legend-dot reserved"></div>Đã đặt trước (5 bàn)</div>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-outline btn-sm" onclick="showPage('table-map')">
+        🗺️ Xem Sơ Đồ Đầy Đủ
+      </button>
+    </div>
+  </div>
+
+</div>
