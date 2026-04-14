@@ -1,0 +1,202 @@
+<!-- components/promo-mgmt.html - Promotion management page section -->
+<div class="page-section" id="page-promo-mgmt">
+
+  <div class="page-header">
+    <div>
+      <h2>Quản Lý Chương Trình Khuyến Mãi</h2>
+      <p>Tạo và quản lý các mã và chương trình khuyến mãi</p>
+    </div>
+    <button class="btn btn-primary" onclick="openAddPromo()">➕ Tạo Khuyến Mãi</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom:20px">
+    <div class="stat-card">
+      <div class="stat-icon green">✅</div>
+      <div class="stat-info">
+        <div class="label">Đang Hoạt Động</div>
+        <div class="value">4</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon gold">📊</div>
+      <div class="stat-info">
+        <div class="label">Lượt Sử Dụng Tháng Này</div>
+        <div class="value">182</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">💸</div>
+      <div class="stat-info">
+        <div class="label">Tổng Giảm Giá</div>
+        <div class="value">12,400,000 ₫</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue">⏰</div>
+      <div class="stat-info">
+        <div class="label">Sắp Hết Hạn</div>
+        <div class="value">2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Promo Table -->
+  <div class="card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Mã KM</th>
+          <th>Tên Chương Trình</th>
+          <th>Loại Giảm</th>
+          <th>Giá Trị</th>
+          <th>Điều Kiện</th>
+          <th>Hạn Dùng</th>
+          <th>Đã Dùng</th>
+          <th>Trạng Thái</th>
+          <th>Thao Tác</th>
+        </tr>
+      </thead>
+      <tbody id="promoTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Add Promo Modal -->
+  <div class="modal-backdrop" id="promoModal" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Tạo Khuyến Mãi Mới</div>
+        <button class="modal-close" onclick="document.getElementById('promoModal').style.display='none'">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Mã Khuyến Mãi *</label>
+            <input type="text" class="form-control" id="pmCode"
+              placeholder="VD: GIAM20" style="text-transform:uppercase">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Loại Giảm *</label>
+            <select class="form-control" id="pmType">
+              <option value="percent">Phần trăm (%)</option>
+              <option value="fixed">Số tiền cố định (₫)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tên Chương Trình *</label>
+          <input type="text" class="form-control" id="pmName" placeholder="VD: Giảm 20% Dịp Lễ">
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Giá Trị Giảm *</label>
+            <input type="number" class="form-control" id="pmValue" min="0" placeholder="20">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Đơn Hàng Tối Thiểu (₫)</label>
+            <input type="number" class="form-control" id="pmMinOrder" min="0" placeholder="500000">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Ngày Bắt Đầu</label>
+            <input type="date" class="form-control" id="pmStart">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ngày Hết Hạn</label>
+            <input type="date" class="form-control" id="pmEnd">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Số Lần Sử Dụng Tối Đa</label>
+          <input type="number" class="form-control" id="pmMaxUse" min="0" placeholder="Để trống = không giới hạn">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="document.getElementById('promoModal').style.display='none'">Hủy</button>
+        <button class="btn btn-primary" onclick="savePromo()">💾 Tạo Khuyến Mãi</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let promosData = [
+  { id:1, code:'GIAM10',   name:'Giảm 10% Cuối Tuần',       type:'percent', value:10,  minOrder:500000,  expires:'30/04/2026', used:48,  status:'active' },
+  { id:2, code:'BIRTHDAY', name:'Sinh Nhật Đặc Biệt',        type:'percent', value:15,  minOrder:0,       expires:'31/12/2026', used:23,  status:'active' },
+  { id:3, code:'VIP15',    name:'Khách Hàng VIP',            type:'percent', value:15,  minOrder:1000000, expires:'31/12/2026', used:57,  status:'active' },
+  { id:4, code:'BUFFET20', name:'Kỷ Niệm 5 Năm',            type:'percent', value:20,  minOrder:0,       expires:'20/04/2026', used:34,  status:'active' },
+  { id:5, code:'GIAM50K',  name:'Giảm 50.000đ Đơn Đầu',    type:'fixed',   value:50000,minOrder:300000, expires:'15/05/2026', used:12,  status:'active' },
+  { id:6, code:'SUMMER22', name:'Hè Rực Rỡ 2022',           type:'percent', value:22,  minOrder:0,       expires:'31/08/2022', used:156, status:'expired' },
+];
+
+function renderPromos() {
+  document.getElementById('promoTableBody').innerHTML = promosData.map(p => `
+    <tr>
+      <td><code style="background:var(--bg2); padding:2px 8px; border-radius:4px; font-size:.82rem">${p.code}</code></td>
+      <td><strong>${p.name}</strong></td>
+      <td>${p.type === 'percent' ? 'Phần trăm' : 'Cố định'}</td>
+      <td style="font-weight:600; color:var(--primary)">${p.type==='percent' ? p.value + '%' : formatCurrency(p.value)}</td>
+      <td style="font-size:.8rem">${p.minOrder ? 'Đơn từ ' + formatCurrency(p.minOrder) : 'Không giới hạn'}</td>
+      <td style="font-size:.8rem; color:var(--text-muted)">${p.expires}</td>
+      <td style="text-align:center">${p.used}</td>
+      <td><span class="badge ${p.status==='active'?'badge-success':'badge-muted'}">${p.status==='active'?'Đang Chạy':'Hết Hạn'}</span></td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="togglePromo(${p.id})">${p.status==='active'?'⏸️':'▶️'}</button>
+        <button class="btn btn-ghost btn-sm" style="color:var(--danger)" onclick="deletePromo(${p.id})">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openAddPromo() {
+  document.getElementById('pmStart').value = todayISO();
+  document.getElementById('promoModal').style.display = 'flex';
+}
+
+function savePromo() {
+  const code  = document.getElementById('pmCode').value.trim().toUpperCase();
+  const name  = document.getElementById('pmName').value.trim();
+  const value = parseFloat(document.getElementById('pmValue').value);
+
+  if (!code || !name || isNaN(value)) {
+    showToast('Thiếu Thông Tin', 'Vui lòng điền đầy đủ thông tin bắt buộc', 'warning');
+    return;
+  }
+
+  promosData.push({
+    id: promosData.length + 1,
+    code,
+    name,
+    type:     document.getElementById('pmType').value,
+    value,
+    minOrder: parseFloat(document.getElementById('pmMinOrder').value) || 0,
+    expires:  document.getElementById('pmEnd').value || '—',
+    used:     0,
+    status:   'active',
+  });
+
+  document.getElementById('promoModal').style.display = 'none';
+  renderPromos();
+  showToast('Tạo Thành Công!', `Mã "${code}" đã được tạo`, 'success');
+}
+
+function togglePromo(id) {
+  const p = promosData.find(x => x.id === id);
+  if (!p) return;
+  p.status = p.status === 'active' ? 'paused' : 'active';
+  renderPromos();
+}
+
+function deletePromo(id) {
+  const p = promosData.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Xóa khuyến mãi "${p.name}"?`)) return;
+  promosData = promosData.filter(x => x.id !== id);
+  renderPromos();
+  showToast('Đã Xóa', `Khuyến mãi "${p.code}" đã bị xóa`, 'warning');
+}
+
+renderPromos();
+</script>

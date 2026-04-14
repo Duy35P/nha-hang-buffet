@@ -1,0 +1,210 @@
+<!-- components/table-map.html - Table map page section -->
+<div class="page-section" id="page-table-map">
+
+  <div class="page-header">
+    <div>
+      <h2>Sơ Đồ Bàn</h2>
+      <p>Chọn bàn để xem thông tin hoặc thực hiện thao tác</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-ghost btn-sm" onclick="showPage('booking')">📅 Đặt Bàn</button>
+      <button class="btn btn-primary btn-sm" onclick="showPage('checkin')">✅ Check-in</button>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="table-legend">
+    <div class="legend-item"><div class="legend-dot available"></div>Trống</div>
+    <div class="legend-item"><div class="legend-dot occupied"></div>Đang sử dụng</div>
+    <div class="legend-item"><div class="legend-dot reserved"></div>Đã đặt trước</div>
+    <div class="legend-item"><div class="legend-dot selected"></div>Đang chọn</div>
+  </div>
+
+  <!-- Selected Table Info (hidden by default) -->
+  <div class="info-panel" id="selected-table-info" style="display:none"></div>
+
+  <!-- Zone A - Phòng Chính -->
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-title">🏛️ Khu A — Phòng Chính (Bàn 01–12)</div>
+    <div class="table-map-grid">
+
+      <div class="table-item available" data-status="available" data-seats="4" data-zone="Khu A"
+           onclick="selectTable(this, '01', 'available')">
+        <div class="table-num">01</div>
+        <div class="table-status-txt" style="color:var(--success)">Trống</div>
+        <div class="table-seats">4 người</div>
+      </div>
+
+      <div class="table-item occupied" data-status="occupied" data-seats="6" data-zone="Khu A"
+           onclick="selectTable(this, '02', 'occupied')">
+        <div class="table-num">02</div>
+        <div class="table-status-txt" style="color:var(--danger)">Đang dùng</div>
+        <div class="table-seats">6 người</div>
+      </div>
+
+      <div class="table-item reserved" data-status="reserved" data-seats="4" data-zone="Khu A"
+           onclick="selectTable(this, '03', 'reserved')">
+        <div class="table-num">03</div>
+        <div class="table-status-txt" style="color:var(--warning)">Đã đặt</div>
+        <div class="table-seats">4 người</div>
+      </div>
+
+      <div class="table-item occupied" data-status="occupied" data-seats="8" data-zone="Khu A"
+           onclick="selectTable(this, '04', 'occupied')">
+        <div class="table-num">04</div>
+        <div class="table-status-txt" style="color:var(--danger)">Đang dùng</div>
+        <div class="table-seats">8 người</div>
+      </div>
+
+      <div class="table-item available" data-status="available" data-seats="4" data-zone="Khu A"
+           onclick="selectTable(this, '05', 'available')">
+        <div class="table-num">05</div>
+        <div class="table-status-txt" style="color:var(--success)">Trống</div>
+        <div class="table-seats">4 người</div>
+      </div>
+
+      <div class="table-item occupied" data-status="occupied" data-seats="6" data-zone="Khu A"
+           onclick="selectTable(this, '06', 'occupied')">
+        <div class="table-num">06</div>
+        <div class="table-status-txt" style="color:var(--danger)">Đang dùng</div>
+        <div class="table-seats">6 người</div>
+      </div>
+
+      <div class="table-item available" data-status="available" data-seats="4" data-zone="Khu A"
+           onclick="selectTable(this, '07', 'available')">
+        <div class="table-num">07</div>
+        <div class="table-status-txt" style="color:var(--success)">Trống</div>
+        <div class="table-seats">4 người</div>
+      </div>
+
+      <div class="table-item occupied" data-status="occupied" data-seats="4" data-zone="Khu A"
+           onclick="selectTable(this, '08', 'occupied')">
+        <div class="table-num">08</div>
+        <div class="table-status-txt" style="color:var(--danger)">Đang dùng</div>
+        <div class="table-seats">4 người</div>
+      </div>
+
+      <div class="table-item reserved" data-status="reserved" data-seats="6" data-zone="Khu A"
+           onclick="selectTable(this, '09', 'reserved')">
+        <div class="table-num">09</div>
+        <div class="table-status-txt" style="color:var(--warning)">Đã đặt</div>
+        <div class="table-seats">6 người</div>
+      </div>
+
+      <div class="table-item available" data-status="available" data-seats="2" data-zone="Khu A"
+           onclick="selectTable(this, '10', 'available')">
+        <div class="table-num">10</div>
+        <div class="table-status-txt" style="color:var(--success)">Trống</div>
+        <div class="table-seats">2 người</div>
+      </div>
+
+      <div class="table-item occupied" data-status="occupied" data-seats="8" data-zone="Khu A"
+           onclick="selectTable(this, '11', 'occupied')">
+        <div class="table-num">11</div>
+        <div class="table-status-txt" style="color:var(--danger)">Đang dùng</div>
+        <div class="table-seats">8 người</div>
+      </div>
+
+      <div class="table-item available" data-status="available" data-seats="4" data-zone="Khu A"
+           onclick="selectTable(this, '12', 'available')">
+        <div class="table-num">12</div>
+        <div class="table-status-txt" style="color:var(--success)">Trống</div>
+        <div class="table-seats">4 người</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Zone B - Phòng VIP -->
+  <div class="card">
+    <div class="card-title">👑 Khu B — Phòng VIP (Bàn 13–24)</div>
+    <div class="table-map-grid">
+
+      <div class="table-item occupied" data-status="occupied" data-seats="10" data-zone="Khu B VIP"
+           onclick="selectTable(this, '13', 'occupied')">
+        <div class="table-num">13</div>
+        <div class="table-status-txt" style="color:var(--danger)">Đang dùng</div>
+        <div class="table-seats">10 người</div>
+      </div>
+
+      <div class="table-item reserved" data-status="reserved" data-seats="8" data-zone="Khu B VIP"
+           onclick="selectTable(this, '14', 'reserved')">
+        <div class="table-num">14</div>
+        <div class="table-status-txt" style="color:var(--warning)">Đã đặt</div>
+        <div class="table-seats">8 người</div>
+      </div>
+
+      <div class="table-item occupied" data-status="occupied" data-seats="6" data-zone="Khu B VIP"
+           onclick="selectTable(this, '15', 'occupied')">
+        <div class="table-num">15</div>
+        <div class="table-status-txt" style="color:var(--danger)">Đang dùng</div>
+        <div class="table-seats">6 người</div>
+      </div>
+
+      <div class="table-item available" data-status="available" data-seats="8" data-zone="Khu B VIP"
+           onclick="selectTable(this, '16', 'available')">
+        <div class="table-num">16</div>
+        <div class="table-status-txt" style="color:var(--success)">Trống</div>
+        <div class="table-seats">8 người</div>
+      </div>
+
+      <div class="table-item occupied" data-status="occupied" data-seats="6" data-zone="Khu B VIP"
+           onclick="selectTable(this, '17', 'occupied')">
+        <div class="table-num">17</div>
+        <div class="table-status-txt" style="color:var(--danger)">Đang dùng</div>
+        <div class="table-seats">6 người</div>
+      </div>
+
+      <div class="table-item available" data-status="available" data-seats="4" data-zone="Khu B VIP"
+           onclick="selectTable(this, '18', 'available')">
+        <div class="table-num">18</div>
+        <div class="table-status-txt" style="color:var(--success)">Trống</div>
+        <div class="table-seats">4 người</div>
+      </div>
+
+      <div class="table-item reserved" data-status="reserved" data-seats="10" data-zone="Khu B VIP"
+           onclick="selectTable(this, '19', 'reserved')">
+        <div class="table-num">19</div>
+        <div class="table-status-txt" style="color:var(--warning)">Đã đặt</div>
+        <div class="table-seats">10 người</div>
+      </div>
+
+      <div class="table-item occupied" data-status="occupied" data-seats="6" data-zone="Khu B VIP"
+           onclick="selectTable(this, '20', 'occupied')">
+        <div class="table-num">20</div>
+        <div class="table-status-txt" style="color:var(--danger)">Đang dùng</div>
+        <div class="table-seats">6 người</div>
+      </div>
+
+      <div class="table-item available" data-status="available" data-seats="4" data-zone="Khu B VIP"
+           onclick="selectTable(this, '21', 'available')">
+        <div class="table-num">21</div>
+        <div class="table-status-txt" style="color:var(--success)">Trống</div>
+        <div class="table-seats">4 người</div>
+      </div>
+
+      <div class="table-item occupied" data-status="occupied" data-seats="8" data-zone="Khu B VIP"
+           onclick="selectTable(this, '22', 'occupied')">
+        <div class="table-num">22</div>
+        <div class="table-status-txt" style="color:var(--danger)">Đang dùng</div>
+        <div class="table-seats">8 người</div>
+      </div>
+
+      <div class="table-item available" data-status="available" data-seats="6" data-zone="Khu B VIP"
+           onclick="selectTable(this, '23', 'available')">
+        <div class="table-num">23</div>
+        <div class="table-status-txt" style="color:var(--success)">Trống</div>
+        <div class="table-seats">6 người</div>
+      </div>
+
+      <div class="table-item reserved" data-status="reserved" data-seats="12" data-zone="Khu B VIP"
+           onclick="selectTable(this, '24', 'reserved')">
+        <div class="table-num">24</div>
+        <div class="table-status-txt" style="color:var(--warning)">Đã đặt</div>
+        <div class="table-seats">12 người</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

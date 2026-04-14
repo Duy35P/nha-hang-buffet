@@ -1,0 +1,183 @@
+<!-- components/checkin.html - Check-in page section -->
+<div class="page-section" id="page-checkin">
+
+  <div class="page-header">
+    <div>
+      <h2>Check-in Khách Hàng</h2>
+      <p>Xác nhận khách đã đến và phân bàn</p>
+    </div>
+  </div>
+
+  <div class="grid-2" style="align-items:start">
+
+    <!-- Check-in Form -->
+    <div class="card">
+      <div class="card-title">🔍 Tìm Đặt Bàn</div>
+
+      <div class="form-group">
+        <label class="form-label">Mã Đặt Bàn hoặc Số Điện Thoại</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" class="form-control" id="checkinSearch"
+            placeholder="#BK001 hoặc 0901234567">
+          <button class="btn btn-primary" onclick="searchCheckin()">🔍</button>
+        </div>
+      </div>
+
+      <div id="checkinResult" style="display:none">
+        <hr class="divider">
+        <div class="info-panel">
+          <div class="info-panel-title">📋 Thông Tin Đặt Bàn</div>
+          <div class="info-row"><span class="lbl">Mã</span><span class="val" id="chkBkId">—</span></div>
+          <div class="info-row"><span class="lbl">Khách Hàng</span><span class="val" id="chkBkName">—</span></div>
+          <div class="info-row"><span class="lbl">Điện Thoại</span><span class="val" id="chkBkPhone">—</span></div>
+          <div class="info-row"><span class="lbl">Ngày Giờ</span><span class="val" id="chkBkDateTime">—</span></div>
+          <div class="info-row"><span class="lbl">Số Khách</span><span class="val" id="chkBkGuests">—</span></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Số Bàn Thực Tế *</label>
+          <select class="form-control" id="checkinTable">
+            <option value="">-- Chọn bàn --</option>
+            <option value="01">Bàn 01 — Trống (4 người)</option>
+            <option value="05">Bàn 05 — Trống (4 người)</option>
+            <option value="07">Bàn 07 — Trống (4 người)</option>
+            <option value="10">Bàn 10 — Trống (2 người)</option>
+            <option value="12">Bàn 12 — Trống (4 người)</option>
+            <option value="16">Bàn 16 — Trống VIP (8 người)</option>
+            <option value="18">Bàn 18 — Trống VIP (4 người)</option>
+            <option value="21">Bàn 21 — Trống VIP (4 người)</option>
+            <option value="23">Bàn 23 — Trống VIP (6 người)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Số Khách Thực Tế</label>
+          <input type="number" class="form-control" id="checkinActualGuests"
+            min="1" max="50" placeholder="Nhập số khách thực tế">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Gói Buffet</label>
+          <select class="form-control" id="checkinPackage">
+            <option value="standard">Buffet Tiêu Chuẩn — 299,000 ₫/người</option>
+            <option value="premium">Buffet Cao Cấp — 449,000 ₫/người</option>
+            <option value="vip">Buffet VIP — 699,000 ₫/người</option>
+            <option value="kids">Trẻ Em (dưới 10 tuổi) — 149,000 ₫/người</option>
+          </select>
+        </div>
+
+        <button class="btn btn-success btn-block" onclick="confirmCheckin()">
+          ✅ Xác Nhận Check-in
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Today's Check-in List -->
+    <div class="card">
+      <div class="card-title">📋 Danh Sách Check-in Hôm Nay</div>
+
+      <div style="margin-bottom:14px">
+        <span class="badge badge-success" style="margin-right:8px">✅ Đã Check-in: 18</span>
+        <span class="badge badge-warning">⏳ Chờ: 5</span>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Mã</th>
+            <th>Khách</th>
+            <th>Bàn</th>
+            <th>Giờ Vào</th>
+            <th>Gói</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#BK004</td>
+            <td>Phạm Thu Dung</td>
+            <td>Bàn 03</td>
+            <td>13:02</td>
+            <td><span class="badge badge-primary">Cao Cấp</span></td>
+          </tr>
+          <tr>
+            <td>#BK001</td>
+            <td>Nguyễn Văn An</td>
+            <td>Bàn 05</td>
+            <td>11:35</td>
+            <td><span class="badge badge-muted">Tiêu Chuẩn</span></td>
+          </tr>
+          <tr>
+            <td>#BK012</td>
+            <td>Bùi Thanh Tú</td>
+            <td>Bàn 08</td>
+            <td>11:28</td>
+            <td><span class="badge badge-warning">VIP</span></td>
+          </tr>
+          <tr>
+            <td>#BK010</td>
+            <td>Đinh Thị Nga</td>
+            <td>Bàn 13</td>
+            <td>11:05</td>
+            <td><span class="badge badge-primary">Cao Cấp</span></td>
+          </tr>
+          <tr>
+            <td>#BK008</td>
+            <td>Cao Minh Trí</td>
+            <td>Bàn 17</td>
+            <td>10:52</td>
+            <td><span class="badge badge-muted">Tiêu Chuẩn</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const mockBookingsCheckin = [
+  { id:'#BK001', name:'Nguyễn Văn An',    phone:'0901234567', datetime:'14/04/2026 11:30', guests:4 },
+  { id:'#BK002', name:'Trần Thị Bình',    phone:'0912345678', datetime:'14/04/2026 12:00', guests:2 },
+  { id:'#BK003', name:'Lê Minh Cường',    phone:'0923456789', datetime:'14/04/2026 12:30', guests:6 },
+  { id:'#BK005', name:'Hoàng Văn Em',     phone:'0945678901', datetime:'14/04/2026 18:00', guests:5 },
+];
+
+function searchCheckin() {
+  const q = document.getElementById('checkinSearch').value.trim().toLowerCase();
+  if (!q) { showToast('Thiếu Thông Tin', 'Nhập mã hoặc số điện thoại để tìm', 'warning'); return; }
+
+  const bk = mockBookingsCheckin.find(b =>
+    b.id.toLowerCase().includes(q) || b.phone.includes(q)
+  );
+
+  if (!bk) {
+    showToast('Không Tìm Thấy', 'Không có đặt bàn nào khớp', 'danger');
+    document.getElementById('checkinResult').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('chkBkId').textContent       = bk.id;
+  document.getElementById('chkBkName').textContent     = bk.name;
+  document.getElementById('chkBkPhone').textContent    = bk.phone;
+  document.getElementById('chkBkDateTime').textContent = bk.datetime;
+  document.getElementById('chkBkGuests').textContent   = bk.guests + ' người';
+  document.getElementById('checkinActualGuests').value = bk.guests;
+  document.getElementById('checkinResult').style.display = 'block';
+}
+
+function confirmCheckin() {
+  const table   = document.getElementById('checkinTable').value;
+  const guests  = document.getElementById('checkinActualGuests').value;
+  const pkg     = document.getElementById('checkinPackage').value;
+
+  if (!table)  { showToast('Chưa Chọn Bàn', 'Vui lòng chọn số bàn', 'warning'); return; }
+  if (!guests) { showToast('Thiếu Thông Tin', 'Nhập số khách thực tế', 'warning'); return; }
+
+  const name = document.getElementById('chkBkName').textContent;
+  showToast('Check-in Thành Công! ✅', `${name} — Bàn ${table} (${guests} khách)`, 'success');
+  document.getElementById('checkinSearch').value = '';
+  document.getElementById('checkinResult').style.display = 'none';
+}
+</script>

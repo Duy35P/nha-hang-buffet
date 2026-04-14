@@ -1,0 +1,224 @@
+<!-- components/menu-mgmt.html - Menu management page section -->
+<div class="page-section" id="page-menu-mgmt">
+
+  <div class="page-header">
+    <div>
+      <h2>Quản Lý Thực Đơn</h2>
+      <p>Thêm, sửa, xóa các món trong menu buffet</p>
+    </div>
+    <button class="btn btn-primary" onclick="openAddMenuItem()">➕ Thêm Món</button>
+  </div>
+
+  <!-- Filter & Search -->
+  <div class="card" style="margin-bottom:18px">
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+      <select class="form-control" id="menuMgmtCatFilter" style="width:180px" onchange="filterMenuMgmt()">
+        <option value="">Tất cả danh mục</option>
+        <option value="nuoc">💧 Nước</option>
+        <option value="bia">🍺 Bia</option>
+        <option value="ruou">🍷 Rượu</option>
+        <option value="khai-vi">🥗 Khai Vị</option>
+        <option value="trang-mien">🍨 Tráng Miệng</option>
+      </select>
+      <input type="text" class="form-control" id="menuMgmtSearch"
+        placeholder="🔍 Tìm kiếm món..." style="flex:1; min-width:200px"
+        oninput="filterMenuMgmt()">
+      <span id="menuMgmtCount" style="font-size:.82rem; color:var(--text-muted); white-space:nowrap"></span>
+    </div>
+  </div>
+
+  <!-- Menu Table -->
+  <div class="card">
+    <table class="data-table" id="menuMgmtTable">
+      <thead>
+        <tr>
+          <th>Icon</th>
+          <th>Tên Món</th>
+          <th>Danh Mục</th>
+          <th>Đơn Vị</th>
+          <th style="text-align:right">Giá</th>
+          <th>Trạng Thái</th>
+          <th>Thao Tác</th>
+        </tr>
+      </thead>
+      <tbody id="menuMgmtBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Add/Edit Modal (hidden) -->
+  <div class="modal-backdrop" id="menuModal" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="menuModalTitle">Thêm Món Mới</div>
+        <button class="modal-close" onclick="closeMenuModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Tên Món *</label>
+          <input type="text" class="form-control" id="miName" placeholder="Tên món ăn">
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Danh Mục *</label>
+            <select class="form-control" id="miCat">
+              <option value="nuoc">💧 Nước</option>
+              <option value="bia">🍺 Bia</option>
+              <option value="ruou">🍷 Rượu</option>
+              <option value="khai-vi">🥗 Khai Vị</option>
+              <option value="trang-mien">🍨 Tráng Miệng</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Đơn Vị</label>
+            <input type="text" class="form-control" id="miUnit" placeholder="chai, ly, đĩa...">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Giá (₫) *</label>
+            <input type="number" class="form-control" id="miPrice" min="0" placeholder="50000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Icon (Emoji)</label>
+            <input type="text" class="form-control" id="miIcon" placeholder="🥤">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Trạng Thái</label>
+          <select class="form-control" id="miStatus">
+            <option value="active">Đang Bán</option>
+            <option value="inactive">Tạm Ngừng</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeMenuModal()">Hủy</button>
+        <button class="btn btn-primary" onclick="saveMenuItem()">💾 Lưu</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Menu items data (cloned from order.js menuData)
+let menuMgmtData = [
+  { id:1,  name:'Nước Khoáng Lavie',  price:15000,  cat:'nuoc',       icon:'💧', unit:'chai',  status:'active' },
+  { id:2,  name:'Pepsi / 7Up',         price:25000,  cat:'nuoc',       icon:'🥤', unit:'lon',   status:'active' },
+  { id:3,  name:'Nước Ép Cam',         price:45000,  cat:'nuoc',       icon:'🍊', unit:'ly',    status:'active' },
+  { id:4,  name:'Nước Ép Dưa Hấu',    price:45000,  cat:'nuoc',       icon:'🍉', unit:'ly',    status:'active' },
+  { id:5,  name:'Sinh Tố Xoài',        price:55000,  cat:'nuoc',       icon:'🥭', unit:'ly',    status:'active' },
+  { id:6,  name:'Trà Đào',             price:35000,  cat:'nuoc',       icon:'🍑', unit:'ly',    status:'active' },
+  { id:7,  name:'Bia Tiger',           price:35000,  cat:'bia',        icon:'🍺', unit:'lon',   status:'active' },
+  { id:8,  name:'Bia Heineken',        price:40000,  cat:'bia',        icon:'🍺', unit:'lon',   status:'active' },
+  { id:9,  name:'Rượu Vang Đỏ',       price:350000, cat:'ruou',       icon:'🍷', unit:'ly',    status:'active' },
+  { id:10, name:'Whisky On The Rocks', price:120000, cat:'ruou',       icon:'🥃', unit:'ly',    status:'active' },
+  { id:11, name:'Gỏi Cuốn Tôm',       price:65000,  cat:'khai-vi',    icon:'🥗', unit:'đĩa',  status:'active' },
+  { id:12, name:'Chả Giò',            price:55000,  cat:'khai-vi',    icon:'🥢', unit:'đĩa',  status:'inactive'},
+  { id:13, name:'Kem Vanilla',         price:45000,  cat:'trang-mien', icon:'🍨', unit:'phần', status:'active' },
+  { id:14, name:'Bánh Flan',           price:35000,  cat:'trang-mien', icon:'🍮', unit:'phần', status:'active' },
+];
+
+let menuEditId = null;
+
+const catLabels = { nuoc:'💧 Nước', bia:'🍺 Bia', ruou:'🍷 Rượu', 'khai-vi':'🥗 Khai Vị', 'trang-mien':'🍨 Tráng Miệng' };
+
+function renderMenuMgmtTable(data) {
+  const tbody = document.getElementById('menuMgmtBody');
+  document.getElementById('menuMgmtCount').textContent = `${data.length} món`;
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">🍽️</div><p>Không có món nào</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(item => `
+    <tr>
+      <td style="font-size:1.4rem; text-align:center">${item.icon}</td>
+      <td><strong>${item.name}</strong></td>
+      <td>${catLabels[item.cat] || item.cat}</td>
+      <td>${item.unit}</td>
+      <td style="text-align:right; font-weight:600">${formatCurrency(item.price)}</td>
+      <td><span class="badge ${item.status==='active'?'badge-success':'badge-muted'}">${item.status==='active'?'Đang Bán':'Tạm Ngừng'}</span></td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="editMenuItem(${item.id})">✏️</button>
+        <button class="btn btn-ghost btn-sm" style="color:var(--danger)" onclick="deleteMenuItem(${item.id})">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterMenuMgmt() {
+  const cat = document.getElementById('menuMgmtCatFilter').value;
+  const q   = document.getElementById('menuMgmtSearch').value.trim().toLowerCase();
+  let filtered = menuMgmtData;
+  if (cat) filtered = filtered.filter(i => i.cat === cat);
+  if (q)   filtered = filtered.filter(i => i.name.toLowerCase().includes(q));
+  renderMenuMgmtTable(filtered);
+}
+
+function openAddMenuItem() {
+  menuEditId = null;
+  document.getElementById('menuModalTitle').textContent = 'Thêm Món Mới';
+  ['miName','miUnit','miIcon'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('miPrice').value  = '';
+  document.getElementById('miStatus').value = 'active';
+  document.getElementById('menuModal').style.display = 'flex';
+}
+
+function editMenuItem(id) {
+  const item = menuMgmtData.find(i => i.id === id);
+  if (!item) return;
+  menuEditId = id;
+  document.getElementById('menuModalTitle').textContent = 'Sửa Món: ' + item.name;
+  document.getElementById('miName').value   = item.name;
+  document.getElementById('miCat').value    = item.cat;
+  document.getElementById('miUnit').value   = item.unit;
+  document.getElementById('miPrice').value  = item.price;
+  document.getElementById('miIcon').value   = item.icon;
+  document.getElementById('miStatus').value = item.status;
+  document.getElementById('menuModal').style.display = 'flex';
+}
+
+function closeMenuModal() {
+  document.getElementById('menuModal').style.display = 'none';
+}
+
+function saveMenuItem() {
+  const name  = document.getElementById('miName').value.trim();
+  const price = parseFloat(document.getElementById('miPrice').value);
+  if (!name || isNaN(price)) { showToast('Thiếu Thông Tin', 'Tên món và giá là bắt buộc', 'warning'); return; }
+
+  const item = {
+    id:     menuEditId || (menuMgmtData.length + 1),
+    name,
+    cat:    document.getElementById('miCat').value,
+    unit:   document.getElementById('miUnit').value || 'phần',
+    price,
+    icon:   document.getElementById('miIcon').value || '🍽️',
+    status: document.getElementById('miStatus').value,
+  };
+
+  if (menuEditId) {
+    const idx = menuMgmtData.findIndex(i => i.id === menuEditId);
+    menuMgmtData[idx] = item;
+    showToast('Đã Cập Nhật', `"${name}" đã được cập nhật`, 'success');
+  } else {
+    menuMgmtData.push(item);
+    showToast('Đã Thêm', `"${name}" đã được thêm vào thực đơn`, 'success');
+  }
+
+  closeMenuModal();
+  filterMenuMgmt();
+}
+
+function deleteMenuItem(id) {
+  const item = menuMgmtData.find(i => i.id === id);
+  if (!item) return;
+  if (!confirm(`Xóa món "${item.name}" khỏi thực đơn?`)) return;
+  menuMgmtData = menuMgmtData.filter(i => i.id !== id);
+  filterMenuMgmt();
+  showToast('Đã Xóa', `"${item.name}" đã bị xóa`, 'warning');
+}
+
+// Khởi tạo bảng
+renderMenuMgmtTable(menuMgmtData);
+</script>

@@ -1,0 +1,215 @@
+<!-- components/staff-mgmt.html - Staff management page section -->
+<div class="page-section" id="page-staff-mgmt">
+
+  <div class="page-header">
+    <div>
+      <h2>Quản Lý Nhân Viên</h2>
+      <p>Quản lý thông tin và lịch làm việc của nhân viên</p>
+    </div>
+    <button class="btn btn-primary" onclick="openAddStaff()">➕ Thêm Nhân Viên</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom:20px">
+    <div class="stat-card">
+      <div class="stat-icon blue">👥</div>
+      <div class="stat-info">
+        <div class="label">Tổng Nhân Viên</div>
+        <div class="value">24</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">✅</div>
+      <div class="stat-info">
+        <div class="label">Đang Làm Hôm Nay</div>
+        <div class="value">16</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon gold">⏱️</div>
+      <div class="stat-info">
+        <div class="label">Ca Sáng</div>
+        <div class="value">8</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">🌙</div>
+      <div class="stat-info">
+        <div class="label">Ca Chiều</div>
+        <div class="value">8</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter -->
+  <div class="card" style="margin-bottom:18px">
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+      <input type="text" class="form-control" id="staffSearch"
+        placeholder="🔍 Tìm tên nhân viên..." style="flex:1; min-width:200px"
+        oninput="filterStaff()">
+      <select class="form-control" id="staffRoleFilter" style="width:180px" onchange="filterStaff()">
+        <option value="">Tất cả bộ phận</option>
+        <option value="Phục Vụ">Phục Vụ</option>
+        <option value="Quản Lý">Quản Lý</option>
+        <option value="Bếp">Bếp</option>
+        <option value="Lễ Tân">Lễ Tân</option>
+        <option value="Thu Ngân">Thu Ngân</option>
+      </select>
+      <select class="form-control" id="staffStatusFilter" style="width:160px" onchange="filterStaff()">
+        <option value="">Tất cả trạng thái</option>
+        <option value="working">Đang làm</option>
+        <option value="off">Nghỉ</option>
+        <option value="leave">Nghỉ phép</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Staff Table -->
+  <div class="card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Nhân Viên</th>
+          <th>Mã NV</th>
+          <th>Bộ Phận</th>
+          <th>Điện Thoại</th>
+          <th>Ca Làm</th>
+          <th>Check-in</th>
+          <th>Trạng Thái</th>
+          <th>Thao Tác</th>
+        </tr>
+      </thead>
+      <tbody id="staffTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Add Staff Modal -->
+  <div class="modal-backdrop" id="staffModal" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Thêm Nhân Viên</div>
+        <button class="modal-close" onclick="document.getElementById('staffModal').style.display='none'">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Họ Tên *</label>
+          <input type="text" class="form-control" id="sName" placeholder="Nguyễn Văn A">
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Điện Thoại *</label>
+            <input type="tel" class="form-control" id="sPhone" placeholder="0901234567">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bộ Phận *</label>
+            <select class="form-control" id="sRole">
+              <option value="Phục Vụ">Phục Vụ</option>
+              <option value="Lễ Tân">Lễ Tân</option>
+              <option value="Thu Ngân">Thu Ngân</option>
+              <option value="Bếp">Bếp</option>
+              <option value="Quản Lý">Quản Lý</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Ca Làm</label>
+            <select class="form-control" id="sShift">
+              <option value="Sáng">Ca Sáng (7h–15h)</option>
+              <option value="Chiều">Ca Chiều (15h–23h)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lương Cơ Bản (₫)</label>
+            <input type="number" class="form-control" id="sSalary" placeholder="5000000">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="document.getElementById('staffModal').style.display='none'">Hủy</button>
+        <button class="btn btn-primary" onclick="saveStaff()">💾 Lưu</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let staffData = [
+  { id:1,  name:'Trần Thị Mai',    code:'NV001', role:'Lễ Tân',   phone:'0901001001', shift:'Sáng',   checkin:'07:02', status:'working' },
+  { id:2,  name:'Nguyễn Văn Bảo', code:'NV002', role:'Phục Vụ',  phone:'0901001002', shift:'Sáng',   checkin:'07:05', status:'working' },
+  { id:3,  name:'Lê Thị Cẩm',     code:'NV003', role:'Phục Vụ',  phone:'0901001003', shift:'Sáng',   checkin:'07:08', status:'working' },
+  { id:4,  name:'Phạm Đức Duy',   code:'NV004', role:'Bếp',      phone:'0901001004', shift:'Sáng',   checkin:'06:45', status:'working' },
+  { id:5,  name:'Hoàng Thị Em',   code:'NV005', role:'Thu Ngân', phone:'0901001005', shift:'Sáng',   checkin:'07:00', status:'working' },
+  { id:6,  name:'Vũ Minh Phú',    code:'NV006', role:'Phục Vụ',  phone:'0901001006', shift:'Chiều',  checkin:'—',     status:'off'     },
+  { id:7,  name:'Đỗ Thị Hạnh',    code:'NV007', role:'Phục Vụ',  phone:'0901001007', shift:'Chiều',  checkin:'—',     status:'off'     },
+  { id:8,  name:'Bùi Văn Khoa',   code:'NV008', role:'Quản Lý',  phone:'0901001008', shift:'Cả ngày',checkin:'08:00', status:'working' },
+  { id:9,  name:'Đinh Thị Lan',   code:'NV009', role:'Phục Vụ',  phone:'0901001009', shift:'Sáng',   checkin:'07:10', status:'leave'   },
+  { id:10, name:'Cao Minh Tân',   code:'NV010', role:'Bếp',      phone:'0901001010', shift:'Chiều',  checkin:'—',     status:'off'     },
+];
+
+const statusBadge   = { working:'badge-success', off:'badge-muted', leave:'badge-warning' };
+const statusLabel   = { working:'Đang Làm', off:'Chưa Vào', leave:'Nghỉ Phép' };
+
+function renderStaff(data) {
+  document.getElementById('staffTableBody').innerHTML = data.map(s => `
+    <tr>
+      <td><strong>${s.name}</strong></td>
+      <td><code style="background:var(--bg2); padding:2px 7px; border-radius:4px">${s.code}</code></td>
+      <td>${s.role}</td>
+      <td>${s.phone}</td>
+      <td>${s.shift}</td>
+      <td>${s.checkin}</td>
+      <td><span class="badge ${statusBadge[s.status]}">${statusLabel[s.status]}</span></td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="viewStaff(${s.id})">👁️</button>
+        <button class="btn btn-ghost btn-sm" onclick="editStaffItem(${s.id})">✏️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterStaff() {
+  const q      = document.getElementById('staffSearch').value.trim().toLowerCase();
+  const role   = document.getElementById('staffRoleFilter').value;
+  const status = document.getElementById('staffStatusFilter').value;
+  let filtered = staffData;
+  if (q)      filtered = filtered.filter(s => s.name.toLowerCase().includes(q));
+  if (role)   filtered = filtered.filter(s => s.role === role);
+  if (status) filtered = filtered.filter(s => s.status === status);
+  renderStaff(filtered);
+}
+
+function openAddStaff() {
+  document.getElementById('staffModal').style.display = 'flex';
+}
+
+function saveStaff() {
+  const name  = document.getElementById('sName').value.trim();
+  const phone = document.getElementById('sPhone').value.trim();
+  if (!name || !phone) { showToast('Thiếu Thông Tin', 'Tên và điện thoại là bắt buộc', 'warning'); return; }
+  staffData.push({
+    id: staffData.length + 1,
+    name, phone,
+    code:   'NV' + String(staffData.length + 1).padStart(3, '0'),
+    role:   document.getElementById('sRole').value,
+    shift:  document.getElementById('sShift').value,
+    checkin:'—',
+    status: 'off',
+  });
+  document.getElementById('staffModal').style.display = 'none';
+  filterStaff();
+  showToast('Đã Thêm', `Nhân viên "${name}" đã được thêm`, 'success');
+}
+
+function viewStaff(id) {
+  const s = staffData.find(x => x.id === id);
+  if (s) showToast(s.name, `${s.role} — Ca ${s.shift}`, 'info');
+}
+
+function editStaffItem(id) {
+  showToast('Thông Báo', 'Chức năng sửa đang phát triển', 'info');
+}
+
+renderStaff(staffData);
+</script>

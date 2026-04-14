@@ -1,0 +1,81 @@
+<!-- components/sidebar.html - Sidebar navigation component -->
+<div class="sidebar-logo">
+  <div class="sidebar-logo-icon">🍽️</div>
+  <h1>Nhà Hàng<br>Buffet Hoàng Gia</h1>
+  <p>Management System</p>
+</div>
+
+<nav class="sidebar-nav">
+
+  <!-- Vận Hành -->
+  <div class="nav-section-title">Vận Hành</div>
+
+  <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
+    <span class="nav-icon">📊</span>
+    <span>Tổng Quan</span>
+  </div>
+
+  <div class="nav-item" data-page="table-map" onclick="showPage('table-map')">
+    <span class="nav-icon">🗺️</span>
+    <span>Sơ Đồ Bàn</span>
+  </div>
+
+  <div class="nav-item" data-page="booking" onclick="showPage('booking')">
+    <span class="nav-icon">📅</span>
+    <span>Đặt Bàn</span>
+  </div>
+
+  <div class="nav-item" data-page="cancel" onclick="showPage('cancel')">
+    <span class="nav-icon">❌</span>
+    <span>Hủy Đặt Bàn</span>
+  </div>
+
+  <div class="nav-item" data-page="checkin" onclick="showPage('checkin')">
+    <span class="nav-icon">✅</span>
+    <span>Check-in</span>
+  </div>
+
+  <div class="nav-item" data-page="order" onclick="showPage('order')">
+    <span class="nav-icon">🛒</span>
+    <span>Gọi Món</span>
+  </div>
+
+  <div class="nav-item" data-page="payment" onclick="showPage('payment')">
+    <span class="nav-icon">💳</span>
+    <span>Thanh Toán</span>
+  </div>
+
+  <div class="nav-item" data-page="promotion-apply" onclick="showPage('promotion-apply')">
+    <span class="nav-icon">🏷️</span>
+    <span>Khuyến Mãi</span>
+  </div>
+
+  <!-- Quản Lý -->
+  <div class="nav-section-title">Quản Lý</div>
+
+  <div class="nav-item" data-page="menu-mgmt" onclick="showPage('menu-mgmt')">
+    <span class="nav-icon">🍜</span>
+    <span>Thực Đơn</span>
+  </div>
+
+  <div class="nav-item" data-page="customer-mgmt" onclick="showPage('customer-mgmt')">
+    <span class="nav-icon">👥</span>
+    <span>Khách Hàng</span>
+  </div>
+
+  <div class="nav-item" data-page="promo-mgmt" onclick="showPage('promo-mgmt')">
+    <span class="nav-icon">🎁</span>
+    <span>Chương Trình KM</span>
+  </div>
+
+  <div class="nav-item" data-page="staff-mgmt" onclick="showPage('staff-mgmt')">
+    <span class="nav-icon">👤</span>
+    <span>Nhân Viên</span>
+  </div>
+
+  <div class="nav-item" data-page="revenue" onclick="showPage('revenue')">
+    <span class="nav-icon">📈</span>
+    <span>Doanh Thu</span>
+  </div>
+
+</nav>
